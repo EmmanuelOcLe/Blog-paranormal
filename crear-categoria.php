@@ -18,7 +18,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['nombre_categoria'])) {
             $stmt->bind_param("si", $nombre_categoria, $id_categoria);
 
             if ($stmt->execute()) {
-                $mensaje = "<button class='btn success'>Categoría actualizada exitosamente</button>";
+                header("Location: crear-categoria.php"); 
+                exit();
             } else {
                 $mensaje = "<button class='btn error'>Error al actualizar la categoría</button>";
             }
@@ -56,7 +57,8 @@ if (isset($_GET['eliminar'])) {
         $stmt->bind_param("i", $id_categoria);
         
         if ($stmt->execute()) {
-            $mensaje = "<button class='btn success'>Categoría eliminada correctamente</button>";
+            header("Location: crear-categoria.php"); 
+                exit();
         } else {
             $mensaje = "<button class='btn error'>Error al eliminar la categoría</button>";
         }
