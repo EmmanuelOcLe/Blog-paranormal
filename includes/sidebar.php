@@ -1,3 +1,14 @@
+<?php 
+
+    // Si ingresan a este componente por url, se redirecciona al index para evitar problemas
+    if (!isset($_SESSION["dasfssgddgsgfvgrdf2352"]))
+    {
+        header("Location: ../index.php");
+        exit();
+    }
+
+?>
+
 <aside id="sidebar">
     <div id="buscador" class="bloque">
         <h3>Buscar</h3>

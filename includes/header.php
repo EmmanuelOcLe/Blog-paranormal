@@ -1,9 +1,16 @@
 <?php
-require_once 'includes/conexion.php'; // Conexión a la base de datos
 
-// Obtener categorías desde la base de datos
-$sql_categorias = "SELECT * FROM categorias ORDER BY id ASC";
-$categorias = mysqli_query($conexion, $sql_categorias);
+    if (!isset($_SESSION["dasfssgddgsgfvgrdf2352"]))
+    {
+        header("Location: ../index.php");
+        exit();
+    }
+
+    require_once 'includes/conexion.php'; // Conexión a la base de datos
+
+    // Obtener categorías desde la base de datos
+    $sql_categorias = "SELECT * FROM categorias ORDER BY id ASC";
+    $categorias = mysqli_query($conexion, $sql_categorias);
 ?>
 
 <header id="cabecera">
