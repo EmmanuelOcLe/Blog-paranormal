@@ -14,7 +14,7 @@
     $nombre = mysqli_real_escape_string($conexion, $_POST["nombre"]);
     $apellidos = mysqli_real_escape_string($conexion, $_POST["apellidos"]);
     $email = mysqli_real_escape_string($conexion, $_POST["email"]);
-    $contrasena = mysqli_real_escape_string($conexion, $_POST["password"]);
+    $contrasena = mysqli_real_escape_string($conexion, md5($_POST["password"]));
     
     // Verificar que no exista el mismo usuario para que no se duplique en la DB
     $sql = "SELECT * from usuarios WHERE email = '$email'";
