@@ -37,14 +37,23 @@
         <h3>Registrarse</h3>
         
         <!-- Mostrar errores -->
-        <div class="alerta alerta-exito">
-            {Se registro correctamente}
-        </div>
-        <div class="alerta alerta-error">
-            {Error en algun dato}
-        </div>
+         <?php if (isset($_GET["register_state"])): ?>
+            <?php if ($_GET["register_state"] == 1){ ?>
+            <div class="alerta alerta-exito">
+                Se registro correctamente
+            </div>
+            <?php }else if ($_GET["register_state"] == 2){ ?>
+            <div class="alerta alerta-error">
+                El email no es válido
+            </div>
+            <?php } else { ?>
+            <div class="alerta alerta-error">
+                El usuario ya existe
+            </div>
+            <?php } ?>
+        <?php endif; ?>
         
-        <form action="registro.php" method="POST"> 
+        <form action="validar_registro.php" method="POST" id="formulario_registro"> 
             <label for="nombre">Nombre</label>
             <input type="text" name="nombre" />
             
