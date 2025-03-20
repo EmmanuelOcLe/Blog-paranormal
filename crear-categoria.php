@@ -29,7 +29,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['nombre_categoria'])) {
             $stmt->bind_param("s", $nombre_categoria);
 
             if ($stmt->execute()) {
-                $mensaje = "<button class='btn success'>Categoría creada exitosamente</button>";
+                header("Location: crear-categoria.php"); 
+                exit();
             } else {
                 $mensaje = "<button class='btn error'>Error al crear la categoría</button>";
             }
