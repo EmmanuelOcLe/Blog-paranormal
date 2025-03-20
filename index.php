@@ -1,3 +1,10 @@
+<?php
+    session_start();
+
+    // Variable que se usa para que no puedan acceder a los includes por url
+    $_SESSION["dasfssgddgsgfvgrdf2352"] = "";
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
