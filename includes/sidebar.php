@@ -18,6 +18,8 @@
         </form>
     </div>
     
+    <!-- Verificar que el usuario haya iniciado sesión correctamente para darle la bienvenida -->
+    <?php if (isset($_SESSION["email"])): ?>
     <div id="usuario-logueado" class="bloque">
         <h3>Bienvenido, {Nombre Usuario}</h3>
         <!--botones-->
@@ -26,6 +28,7 @@
         <a href="mis-datos.php" class="boton boton-naranja">{Mis datos}</a>
         <a href="cerrar.php" class="boton boton-rojo">{Cerrar sesión}</a>
     </div>
+    <?php endif; ?>
     
     <div id="login" class="bloque">
         <h3>Inicia Sesión</h3>
