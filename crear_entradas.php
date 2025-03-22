@@ -9,7 +9,7 @@
         $tituloEntrada = trim($_POST['tituloEntrada']);
         $descripcionEntrada = trim($_POST['descripcionEntrada']);
         $categoria_id = intval($_POST['categoria_id']);
-        $usuario_id = $_SESSION['usuario_id'] ?? 1; 
+        $usuario_id = $_SESSION['user_id']; 
         date_default_timezone_set("America/Bogota");
         $fecha = date("Y-m-d");
     
@@ -121,7 +121,7 @@
             <label for="descripcionEntrada">Descripción:</label>
             <textarea name="descripcionEntrada" required><?= htmlspecialchars($editarEntrada['descripcion'] ?? '') ?></textarea>
             <label for="categoria_id">Categoría:</label>
-            <select name="categoria_id" required>
+            <select name="categoria_id" style="width:200px" required>
                 <?php while ($categoria = mysqli_fetch_assoc($categorias)) : ?>
                     <option value="<?= $categoria['id'] ?>" <?= isset($editarEntrada) && $editarEntrada['categoria_id'] == $categoria['id'] ? 'selected' : '' ?>>
                         <?= htmlspecialchars($categoria['nombre']) ?>

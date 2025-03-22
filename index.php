@@ -5,7 +5,7 @@
     require_once 'includes/conexion.php';
 
     // Obtener solo las últimas 5 entradas con categoría
-    $entradas_sql = "SELECT e.id, e.titulo, e.descripcion, e.fecha, c.nombre as categoria FROM entradas e INNER JOIN categorias c ON e.categoria_id = c.id ORDER BY e.id DESC LIMIT 5";
+    $entradas_sql = "SELECT e.id, e.titulo, SUBSTRING(e.descripcion,1,250) AS 'descripcion', e.fecha, c.nombre as categoria FROM entradas e INNER JOIN categorias c ON e.categoria_id = c.id ORDER BY e.id DESC LIMIT 5";
     $entradas = mysqli_query($conexion, $entradas_sql);
 ?>
 
@@ -25,10 +25,10 @@
         <?php while ($entrada = mysqli_fetch_assoc($entradas)) : ?>
             <article class="entrada">
                 <a href="entrada.php?id=<?= $entrada['id'] ?>">
-                    <h2><?= htmlspecialchars($entrada['titulo']) ?></h2>
+                    <h2 style="width: 80%"><?= htmlspecialchars($entrada['titulo']) ?></h2>
                     <span class="fecha"> <?= htmlspecialchars($entrada['categoria']) ?> | <?= htmlspecialchars($entrada['fecha']) ?> </span>
                     <p>
-                        <?= htmlspecialchars(substr($entrada['descripcion'], 0, 100)) ?>...
+                        <?= $entrada['descripcion']; ?>
                     </p>
                 </a>
             </article>
