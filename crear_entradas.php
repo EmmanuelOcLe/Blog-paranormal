@@ -8,17 +8,18 @@
     if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['tituloEntrada'])) {
         $tituloEntrada = trim($_POST['tituloEntrada']);
         $descripcionEntrada = trim($_POST['descripcionEntrada']);
-        // $categoria_id = intval($_POST['categoria_id']); // Comentado porque aún no lo usarás
-        $usuario_id = $_SESSION['usuario_id'] ?? 1; // Suponiendo que el usuario está en sesión
-        $fecha = $_POST['fecha'];
-
-        if (!empty($tituloEntrada) && !empty($descripcionEntrada) && !empty($fecha)) {
+        $categoria_id = intval($_POST['categoria_id']);
+        $usuario_id = $_SESSION['usuario_id'] ?? 1; // esto es suponiendo que el usuario ya esta logueado
+        date_default_timezone_set("America/Bogota");
+        $fecha = date("Y-m-d");
+    
+        if (!empty($tituloEntrada) && !empty($descripcionEntrada) && !empty($categoria_id) && !empty($fecha)) {
             if (isset($_POST['id_entrada']) && !empty($_POST['id_entrada'])) {
                 // Actualizar entrada existente
                 $id_entrada = intval($_POST['id_entrada']);
-                $stmt = $conexion->prepare("UPDATE entradas SET titulo=?, descripcion=?, fecha=? WHERE id=?");
-                $stmt->bind_param("sssi", $tituloEntrada, $descripcionEntrada, $fecha, $id_entrada);
-
+                $stmt = $conexion->prepare("UPDATE entradas SET titulo=?, descripcion=?, categoria_id=?, fecha=? WHERE id=?");
+                $stmt->bind_param("ssisi", $tituloEntrada, $descripcionEntrada, $categoria_id, $fecha, $id_entrada);
+    
                 if ($stmt->execute()) {
                     $mensaje = "<button class='btn success'>Entrada actualizada exitosamente</button>";
                 } else {
@@ -27,9 +28,9 @@
                 $stmt->close();
             } else {
                 // Insertar nueva entrada
-                $stmt = $conexion->prepare("INSERT INTO entradas (usuario_id, titulo, descripcion, fecha) VALUES (?, ?, ?, ?)");
-                $stmt->bind_param("isss", $usuario_id, $tituloEntrada, $descripcionEntrada, $fecha);
-
+                $stmt = $conexion->prepare("INSERT INTO entradas (usuario_id, categoria_id, titulo, descripcion, fecha) VALUES (?, ?, ?, ?, ?)");
+                $stmt->bind_param("iisss", $usuario_id, $categoria_id, $tituloEntrada, $descripcionEntrada, $fecha);
+    
                 if ($stmt->execute()) {
                     $mensaje = "<button class='btn success'>Entrada creada exitosamente</button>";
                 } else {
@@ -67,11 +68,15 @@
         $stmt_verificar->close();
     }
     
-    // Obtener entradas actualizadas sin categoría por ahora
-    $entradas_sql = "SELECT id, titulo, descripcion, fecha FROM entradas ORDER BY id DESC";
+    // Obtener entradas actualizadas con categoría
+    $entradas_sql = "SELECT e.id, e.titulo, e.descripcion, e.fecha, c.nombre as categoria FROM entradas e INNER JOIN categorias c ON e.categoria_id = c.id ORDER BY e.id DESC";
     $entradas = mysqli_query($conexion, $entradas_sql);
     
-    // Si se va a editar, obtener datos de la entrada
+    // Obtener categorias para el formulario
+    $categorias_sql = "SELECT id, nombre FROM categorias";
+    $categorias = mysqli_query($conexion, $categorias_sql);
+    
+    // Si se va a editar obtener datos de la entrada
     $editarEntrada = null;
     if (isset($_GET['editar'])) {
         $id_entrada = intval($_GET['editar']);
@@ -97,6 +102,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crear entradas</title>
     <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/categorias.css">
 </head>
 <body>
 <div id="contenedor">
@@ -107,9 +113,15 @@
             <label for="tituloEntrada">Título:</label>
             <input type="text" name="tituloEntrada" value="<?= htmlspecialchars($editarEntrada['titulo'] ?? '') ?>" required>
             <label for="descripcionEntrada">Descripción:</label>
-            <input type="text" name="descripcionEntrada" value="<?= htmlspecialchars($editarEntrada['descripcion'] ?? '') ?>" required>
-            <label for="fecha">Fecha:</label>
-            <input type="date" name="fecha" value="<?= htmlspecialchars($editarEntrada['fecha'] ?? '') ?>" required>
+            <textarea name="descripcionEntrada" value="<?= htmlspecialchars($editarEntrada['descripcion'] ?? '') ?>" required></textarea>
+            <label for="categoria_id">Categoría:</label>
+            <select name="categoria_id" required>
+                <?php while ($categoria = mysqli_fetch_assoc($categorias)) : ?>
+                    <option value="<?= $categoria['id'] ?>" <?= isset($editarEntrada) && $editarEntrada['categoria_id'] == $categoria['id'] ? 'selected' : '' ?>>
+                        <?= htmlspecialchars($categoria['nombre']) ?>
+                    </option>
+                <?php endwhile; ?>
+            </select>
             <button type="submit" class="btn <?= isset($editarEntrada) ? 'edit' : 'success' ?>">
                 <?= isset($editarEntrada) ? 'Actualizar entrada' : 'Crear entrada' ?>
             </button>
@@ -118,7 +130,7 @@
         <ul>
             <?php while ($entrada = mysqli_fetch_assoc($entradas)) : ?>
                 <li>
-                    <?= htmlspecialchars($entrada['titulo']) ?>
+                    <?= htmlspecialchars($entrada['titulo']) ?> - <strong><?= htmlspecialchars($entrada['categoria']) ?></strong>
                     <a href="?editar=<?= $entrada['id'] ?>" class="btn edit">Editar</a>
                     <a href="?eliminar=<?= $entrada['id'] ?>" class="btn delete" onclick="return confirm('¿Seguro que deseas eliminar esta entrada?')">Eliminar</a>
                 </li>
