@@ -1,8 +1,8 @@
 <?php
-    session_start();
-
-    // Variable que se usa para que no puedan acceder a los includes por url
-    $_SESSION["dasfssgddgsgfvgrdf2352"] = "";
+  error_reporting(E_ALL);
+  ini_set('display_errors', 1);
+  session_start();
+  $_SESSION["dasfssgddgsgfvgrdf2352"] = "";
 ?>
 
 <!DOCTYPE html>

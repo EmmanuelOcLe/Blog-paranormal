@@ -40,7 +40,8 @@
         session_unset();
         session_regenerate_id(true); // Para que no se pueda cometer secuestro de sesión
   
-        $_SESSION["user_id"] = $id;
+        // $_SESSION["user_id"] = $id;
+        $_SESSION["user_id"] = $result["id"];
         $_SESSION["user_email"] = $email;
         $_SESSION["user_name"] = $result["nombre"];
   
