@@ -16,7 +16,7 @@
 <header id="cabecera">
     <div id="logo">
         <a href="index.php">
-            Blog de {Temas}
+            Blog paranormal
         </a>
     </div>
     <nav id="menu">
@@ -27,7 +27,7 @@
 
             <?php while ($categoria = mysqli_fetch_assoc($categorias)) : ?>
                 <li>
-                    <a href="categoria.php?id=<?= $categoria['id']; ?>">
+                    <a href="categoria.php?categoria=<?= $categoria['id']; ?>">
                         <?= htmlspecialchars($categoria['nombre']); ?>
                     </a>
                 </li>
