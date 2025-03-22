@@ -11,58 +11,69 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['nombre_categoria'])) {
     $nombre_categoria = trim($_POST['nombre_categoria']);
 
     if (!empty($nombre_categoria)) {
-        if (isset($_POST['id_categoria']) && !empty($_POST['id_categoria'])) {
-            // Actualizar categoría existente
-            $id_categoria = intval($_POST['id_categoria']);
-            $stmt = $conexion->prepare("UPDATE categorias SET nombre=? WHERE id=?");
-            $stmt->bind_param("si", $nombre_categoria, $id_categoria);
-
-            if ($stmt->execute()) {
-                header("Location: crear-categoria.php"); 
-                exit();
-            } else {
-                $mensaje = "<button class='btn error'>Error al actualizar la categoría</button>";
-            }
-            $stmt->close();
+        if (strlen($nombre_categoria) > 15) {
+            $mensaje = "<button class='btn error'>El nombre de la categoría no puede superar los 15 caracteres</button>";
         } else {
-            // Insertar nueva categoría
-            $stmt = $conexion->prepare("INSERT INTO categorias (nombre) VALUES (?)");
-            $stmt->bind_param("s", $nombre_categoria);
+            if (isset($_POST['id_categoria']) && !empty($_POST['id_categoria'])) {
+                // Actualizar categoría existente
+                $id_categoria = intval($_POST['id_categoria']);
+                $stmt = $conexion->prepare("UPDATE categorias SET nombre=? WHERE id=?");
+                $stmt->bind_param("si", $nombre_categoria, $id_categoria);
 
-            if ($stmt->execute()) {
-                header("Location: crear-categoria.php"); 
-                exit();
+                if ($stmt->execute()) {
+                    header("Location: crear-categoria.php"); 
+                    exit();
+                } else {
+                    $mensaje = "<button class='btn error'>Error al actualizar la categoría</button>";
+                }
+                $stmt->close();
             } else {
-                $mensaje = "<button class='btn error'>Error al crear la categoría</button>";
+                // Insertar nueva categoría
+                $stmt = $conexion->prepare("INSERT INTO categorias (nombre) VALUES (?)");
+                $stmt->bind_param("s", $nombre_categoria);
+
+                if ($stmt->execute()) {
+                    header("Location: crear-categoria.php"); 
+                    exit();
+                } else {
+                    $mensaje = "<button class='btn error'>Error al crear la categoría</button>";
+                }
+                $stmt->close();
             }
-            $stmt->close();
         }
     } else {
         $mensaje = "<button class='btn error'>El nombre de la categoría no puede estar vacío</button>";
     }
 }
 
-// Eliminar categoría
+// Eliminar categoría y sus entradas asociadas
 if (isset($_GET['eliminar'])) {
     $id_categoria = intval($_GET['eliminar']);
 
-    // Verificar que la categoría exista antes de eliminar
+    // Verificar que la categoría existe
     $stmt_verificar = $conexion->prepare("SELECT id FROM categorias WHERE id = ?");
     $stmt_verificar->bind_param("i", $id_categoria);
     $stmt_verificar->execute();
     $resultado = $stmt_verificar->get_result();
 
     if ($resultado->num_rows > 0) {
-        $stmt = $conexion->prepare("DELETE FROM categorias WHERE id = ?");
-        $stmt->bind_param("i", $id_categoria);
-        
-        if ($stmt->execute()) {
+        // Primero eliminamos las entradas asociadas
+        $stmt1 = $conexion->prepare("DELETE FROM entradas WHERE categoria_id = ?");
+        $stmt1->bind_param("i", $id_categoria);
+        $stmt1->execute();
+        $stmt1->close();
+
+        // Luego eliminamos la categoría
+        $stmt2 = $conexion->prepare("DELETE FROM categorias WHERE id = ?");
+        $stmt2->bind_param("i", $id_categoria);
+
+        if ($stmt2->execute()) {
             header("Location: crear-categoria.php"); 
-                exit();
+            exit();
         } else {
             $mensaje = "<button class='btn error'>Error al eliminar la categoría</button>";
         }
-        $stmt->close();
+        $stmt2->close();
     } else {
         $mensaje = "<button class='btn error'>La categoría no existe</button>";
     }
@@ -100,17 +111,26 @@ if (isset($_GET['editar'])) {
     <title>Gestión de Categorías</title>
     <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="./css/categorias.css">
+    <script>
+        function validarFormulario(event) {
+            let inputNombre = document.getElementById("nombre_categoria");
+            if (inputNombre.value.length > 15) {
+                alert("El nombre de la categoría no puede superar los 15 caracteres");
+                event.preventDefault();
+            }
+        }
+    </script>
 </head>
 <body>
     <div id="contenedor">
         <?php include 'includes/sidebar.php' ?>
         <div id="principal">
             <h1>Gestión de Categorías</h1>
-
-            <form action="<?= $_SERVER['PHP_SELF']; ?>" method="POST">
+            <?= $mensaje ?>
+            <form action="<?= $_SERVER['PHP_SELF']; ?>" method="POST" onsubmit="validarFormulario(event)">
                 <input type="hidden" name="id_categoria" value="<?= $categoria_editar['id'] ?? '' ?>">
                 <label for="nombre_categoria">Nombre de la categoría:</label>
-                <input type="text" name="nombre_categoria" value="<?= htmlspecialchars($categoria_editar['nombre'] ?? '') ?>" required>
+                <input type="text" id="nombre_categoria" name="nombre_categoria" value="<?= htmlspecialchars($categoria_editar['nombre'] ?? '') ?>" required>
                 <button type="submit" class="btn <?= isset($categoria_editar) ? 'edit' : 'success' ?>">
                     <?= isset($categoria_editar) ? 'Actualizar Categoría' : 'Crear Categoría' ?>
                 </button>
@@ -122,12 +142,21 @@ if (isset($_GET['editar'])) {
                     <li>
                         <?= htmlspecialchars($categoria['nombre']); ?>
                         <a href="?editar=<?= $categoria['id']; ?>" class="btn edit">Editar</a>
-                        <a href="?eliminar=<?= $categoria['id']; ?>" class="btn delete" onclick="return confirm('¿Seguro que deseas eliminar esta categoría?')">Eliminar</a>
+                        <a href="#" class="btn delete" onclick="confirmarEliminacion(<?= $categoria['id']; ?>)">Eliminar</a>
                     </li>
                 <?php endwhile; ?>
             </ul>
         </div>
     </div>
     <?php include 'includes/footer.php' ?>
+
+    <script>
+        function confirmarEliminacion(id_categoria) {
+            let confirmacion = confirm("⚠️ ADVERTENCIA: Se eliminarán todas las entradas asociadas a esta categoría. ¿Deseas continuar?");
+            if (confirmacion) {
+                window.location.href = "crear-categoria.php?eliminar=" + id_categoria;
+            }
+        }
+    </script>
 </body>
 </html>

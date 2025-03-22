@@ -9,13 +9,12 @@
         $tituloEntrada = trim($_POST['tituloEntrada']);
         $descripcionEntrada = trim($_POST['descripcionEntrada']);
         $categoria_id = intval($_POST['categoria_id']);
-        $usuario_id = $_SESSION['usuario_id'] ?? 1; // esto es suponiendo que el usuario ya esta logueado
+        $usuario_id = $_SESSION['usuario_id'] ?? 1; 
         date_default_timezone_set("America/Bogota");
         $fecha = date("Y-m-d");
     
-        if (!empty($tituloEntrada) && !empty($descripcionEntrada) && !empty($categoria_id) && !empty($fecha)) {
+        if (!empty($tituloEntrada) && strlen($tituloEntrada) <= 30 && !empty($descripcionEntrada) && !empty($categoria_id) && !empty($fecha)) {
             if (isset($_POST['id_entrada']) && !empty($_POST['id_entrada'])) {
-                // Actualizar entrada existente
                 $id_entrada = intval($_POST['id_entrada']);
                 $stmt = $conexion->prepare("UPDATE entradas SET titulo=?, descripcion=?, categoria_id=?, fecha=? WHERE id=?");
                 $stmt->bind_param("ssisi", $tituloEntrada, $descripcionEntrada, $categoria_id, $fecha, $id_entrada);
@@ -27,7 +26,6 @@
                 }
                 $stmt->close();
             } else {
-                // Insertar nueva entrada
                 $stmt = $conexion->prepare("INSERT INTO entradas (usuario_id, categoria_id, titulo, descripcion, fecha) VALUES (?, ?, ?, ?, ?)");
                 $stmt->bind_param("iisss", $usuario_id, $categoria_id, $tituloEntrada, $descripcionEntrada, $fecha);
     
@@ -39,7 +37,7 @@
                 $stmt->close();
             }
         } else {
-            $mensaje = "<button class='btn error'>Todos los campos son obligatorios</button>";
+            $mensaje = "<button class='btn error'>El título no puede exceder los 30 caracteres y todos los campos son obligatorios</button>";
         }
     }
     
@@ -103,6 +101,14 @@
     <title>Crear entradas</title>
     <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="./css/categorias.css">
+    <script>
+        function validarTitulo(input) {
+            if (input.value.length > 50) {
+                alert("El título no puede superar los 50 caracteres");
+                input.value = input.value.substring(0, 50);
+            }
+        }
+    </script>
 </head>
 <body>
 <div id="contenedor">
@@ -111,9 +117,9 @@
         <form action="<?= $_SERVER['PHP_SELF']; ?>" method="POST">
             <input type="hidden" name="id_entrada" value="<?= $editarEntrada['id'] ?? '' ?>">
             <label for="tituloEntrada">Título:</label>
-            <input type="text" name="tituloEntrada" value="<?= htmlspecialchars($editarEntrada['titulo'] ?? '') ?>" required>
+            <input type="text" name="tituloEntrada" value="<?= htmlspecialchars($editarEntrada['titulo'] ?? '') ?>" oninput="validarTitulo(this)" required>
             <label for="descripcionEntrada">Descripción:</label>
-            <textarea name="descripcionEntrada" value="<?= htmlspecialchars($editarEntrada['descripcion'] ?? '') ?>" required></textarea>
+            <textarea name="descripcionEntrada" required><?= htmlspecialchars($editarEntrada['descripcion'] ?? '') ?></textarea>
             <label for="categoria_id">Categoría:</label>
             <select name="categoria_id" required>
                 <?php while ($categoria = mysqli_fetch_assoc($categorias)) : ?>
