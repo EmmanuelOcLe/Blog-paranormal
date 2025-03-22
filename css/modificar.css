@@ -18,9 +18,6 @@
     overflow: hidden;
 }
 
-#principal a{
-    color: #333;
-}
 
 #principal h1{
     font-size: 32px;
@@ -40,9 +37,6 @@
 #principal p{
     margin-top: 8px;
 }
-
-
-
 
 /* Estilos del formulario */
 form {
@@ -97,17 +91,17 @@ button:hover {
 }
 
 /* Estilo del enlace "Volver" */
-a {
+.volver {
     display: inline-block;
-    margin-top: 15px;
-    color: #2979CD;
+    margin-top: 40px;
+    color: #ffffff;
     font-weight: bold;
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
-a:hover {
-    color: #0056b3;
+.volver:hover {
+    color: #ffffff;
 }
 
 /*PIE DE PAGINA*/

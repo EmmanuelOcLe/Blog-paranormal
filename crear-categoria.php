@@ -103,6 +103,7 @@ if (isset($_GET['editar'])) {
 </head>
 <body>
     <div id="contenedor">
+        <?php include 'includes/sidebar.php' ?>
         <div id="principal">
             <h1>Gestión de Categorías</h1>
 

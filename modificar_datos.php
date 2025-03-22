@@ -54,7 +54,7 @@ if ($resultado->num_rows > 0) {
             <button type="submit">Guardar Cambios</button>
         </form>
     
-        <a href="mis_datos.php">Volver</a>
+        <button onclick="window.location.href='mis_datos.php'" class="volver">Volver</button>
       </div>
   </div>
 
