@@ -9,7 +9,7 @@
         $tituloEntrada = trim($_POST['tituloEntrada']);
         $descripcionEntrada = trim($_POST['descripcionEntrada']);
         $categoria_id = intval($_POST['categoria_id']);
-        $usuario_id = $_SESSION['usuario_id'] ?? 1; // esto es suponiendo que el usuario ya esta logueado
+        $usuario_id = $_SESSION['user_id']; // esto es suponiendo que el usuario ya esta logueado
         date_default_timezone_set("America/Bogota");
         $fecha = date("Y-m-d");
     
