@@ -115,7 +115,7 @@
             <label for="descripcionEntrada">Descripción:</label>
             <textarea name="descripcionEntrada" value="<?= htmlspecialchars($editarEntrada['descripcion'] ?? '') ?>" required></textarea>
             <label for="categoria_id">Categoría:</label>
-            <select name="categoria_id" required>
+            <select name="categoria_id" style="width:200px" required>
                 <?php while ($categoria = mysqli_fetch_assoc($categorias)) : ?>
                     <option value="<?= $categoria['id'] ?>" <?= isset($editarEntrada) && $editarEntrada['categoria_id'] == $categoria['id'] ? 'selected' : '' ?>>
                         <?= htmlspecialchars($categoria['nombre']) ?>

@@ -27,8 +27,8 @@
                 <a href="entrada.php?id=<?= $entrada['id'] ?>">
                     <h2><?= htmlspecialchars($entrada['titulo']) ?></h2>
                     <span class="fecha"> <?= htmlspecialchars($entrada['categoria']) ?> | <?= htmlspecialchars($entrada['fecha']) ?> </span>
-                    <p>
-                        <?= htmlspecialchars(substr($entrada['descripcion'], 0, 100)) ?>...
+                    <p style="width: 70%; height: 80px; overflow: hidden;">
+                        <?= $entrada['descripcion']; ?>
                     </p>
                 </a>
             </article>

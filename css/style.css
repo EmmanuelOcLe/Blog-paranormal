@@ -194,6 +194,7 @@ input[type="submit"],
     margin-left: 20px;
     padding: 20px;
     overflow: hidden;
+    margin-bottom: 30px;
 }
 
 #principal a{
