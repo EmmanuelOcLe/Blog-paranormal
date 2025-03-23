@@ -28,7 +28,7 @@
                     <h2 style="width: 80%"><?= htmlspecialchars($entrada['titulo']) ?></h2>
                     <span class="fecha"> <?= htmlspecialchars($entrada['categoria']) ?> | <?= htmlspecialchars($entrada['fecha']) ?> </span>
                     <p>
-                        <?= $entrada['descripcion']; ?>
+                        <?= htmlspecialchars($entrada['descripcion']); ?>
                     </p>
                 </a>
             </article>

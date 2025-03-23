@@ -30,7 +30,7 @@ if (!empty($busqueda)) {
     $stmt_categoria->close();
 
     // Consulta principal para buscar en títulos, descripciones y categorías
-    $sql = "SELECT e.id, e.titulo, e.descripcion, e.fecha, c.nombre AS categoria 
+    $sql = "SELECT e.id, e.titulo, SUBSTRING(e.descripcion,1, 250) AS 'descripcion', e.fecha, c.nombre AS categoria 
             FROM entradas e 
             JOIN categorias c ON e.categoria_id = c.id 
             WHERE e.titulo LIKE ? OR e.descripcion LIKE ?";

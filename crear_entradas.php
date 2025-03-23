@@ -1,7 +1,7 @@
 <?php
     session_start();
     require_once 'includes/header.php';
-    require_once 'includes/conexion.php'; 
+    require_once 'includes/conexion.php';
 
     $mensaje = "";
 
@@ -44,26 +44,40 @@
     // Eliminar entrada
     if (isset($_GET['eliminar'])) {
         $id_entrada = intval($_GET['eliminar']);
-    
-        $stmt_verificar = $conexion->prepare("SELECT id FROM entradas WHERE id = ?");
-        $stmt_verificar->bind_param("i", $id_entrada);
-        $stmt_verificar->execute();
-        $resultado = $stmt_verificar->get_result();
-    
-        if ($resultado->num_rows > 0) {
-            $stmt = $conexion->prepare("DELETE FROM entradas WHERE id = ?");
-            $stmt->bind_param("i", $id_entrada);
-            
-            if ($stmt->execute()) {
-                $mensaje = "<button class='btn success'>Entrada eliminada correctamente</button>";
+
+        $sql2 = "SELECT usuario_id FROM entradas WHERE id = $id_entrada";
+        $query2 = mysqli_query($conexion, $sql2);
+        $id_autor = mysqli_fetch_assoc($query2);
+
+        if ($_SESSION["user_id"] == $id_autor["usuario_id"])
+        {
+            $stmt_verificar = $conexion->prepare("SELECT id FROM entradas WHERE id = ?");
+            $stmt_verificar->bind_param("i", $id_entrada);
+            $stmt_verificar->execute();
+            $resultado = $stmt_verificar->get_result();
+        
+            if ($resultado->num_rows > 0) {
+                $stmt = $conexion->prepare("DELETE FROM entradas WHERE id = ?");
+                $stmt->bind_param("i", $id_entrada);
+                
+                if ($stmt->execute()) {
+                    $mensaje = "<button class='btn success'>Entrada eliminada correctamente</button>";
+                } else {
+                    $mensaje = "<button class='btn error'>Error al eliminar la entrada</button>";
+                }
+                $stmt->close();
             } else {
-                $mensaje = "<button class='btn error'>Error al eliminar la entrada</button>";
+                $mensaje = "<button class='btn error'>La entrada no existe</button>";
             }
-            $stmt->close();
-        } else {
-            $mensaje = "<button class='btn error'>La entrada no existe</button>";
+            $stmt_verificar->close();
         }
-        $stmt_verificar->close();
+        else
+        {
+            echo "<script>alert('No puede eliminar una entrada que no creó.')</script>";
+            echo "<script>window.location.href = 'crear_entradas.php'</script>";
+            exit();
+        }
+    
     }
     
     // Obtener entradas actualizadas con categoría
@@ -78,18 +92,33 @@
     $editarEntrada = null;
     if (isset($_GET['editar'])) {
         $id_entrada = intval($_GET['editar']);
-    
-        $stmt = $conexion->prepare("SELECT * FROM entradas WHERE id = ?");
-        $stmt->bind_param("i", $id_entrada);
-        $stmt->execute();
-        $resultado = $stmt->get_result();
-        $editarEntrada = $resultado->fetch_assoc();
-    
-        if (!$editarEntrada) {
-            $mensaje = "<button class='btn error'>La entrada no existe</button>";
+
+        // Consulta para verificar que el usuario que va a eliminar la entrada es el que la creó
+        $sql2 = "SELECT usuario_id FROM entradas WHERE id = $id_entrada";
+        $query2 = mysqli_query($conexion, $sql2);
+        $id_autor = mysqli_fetch_assoc($query2);
+
+        if ($_SESSION["user_id"] == $id_autor["usuario_id"])
+        {
+            $stmt = $conexion->prepare("SELECT * FROM entradas WHERE id = ?");
+            $stmt->bind_param("i", $id_entrada);
+            $stmt->execute();
+            $resultado = $stmt->get_result();
+            $editarEntrada = $resultado->fetch_assoc();
+        
+            if (!$editarEntrada) {
+                $mensaje = "<button class='btn error'>La entrada no existe</button>";
+            }
+        
+            $stmt->close();
         }
-    
-        $stmt->close();
+
+        else
+        {
+            echo "<script>alert('No puede editar una entrada que no creó.')</script>";
+            echo "<script>window.location.href = 'crear_entradas.php'</script>";
+            exit();
+        }
     }
 ?>
 
@@ -134,12 +163,21 @@
         </form>
         <h2>Lista de Entradas</h2>
         <ul>
+            <!-- Solo se muestran disponibles para gestionar las entradas que creó el usuario -->
             <?php while ($entrada = mysqli_fetch_assoc($entradas)) : ?>
-                <li>
-                    <?= htmlspecialchars($entrada['titulo']) ?> - <strong><?= htmlspecialchars($entrada['categoria']) ?></strong>
-                    <a href="?editar=<?= $entrada['id'] ?>" class="btn edit">Editar</a>
-                    <a href="?eliminar=<?= $entrada['id'] ?>" class="btn delete" onclick="return confirm('¿Seguro que deseas eliminar esta entrada?')">Eliminar</a>
-                </li>
+                <?php
+                    $sql_autor = "SELECT usuario_id FROM entradas WHERE id = " . $entrada["id"];
+                    $query = mysqli_query($conexion, $sql_autor);
+                    $autor = mysqli_fetch_assoc($query);
+
+                    if ($_SESSION["user_id"] == $autor["usuario_id"]):
+                ?>
+                    <li>
+                        <?= htmlspecialchars($entrada['titulo']) ?> - <strong><?= htmlspecialchars($entrada['categoria']) ?></strong>
+                        <a href="?editar=<?= $entrada['id'] ?>" class="btn edit">Editar</a>
+                        <a href="?eliminar=<?= $entrada['id'] ?>" class="btn delete" onclick="return confirm('¿Seguro que deseas eliminar esta entrada?')">Eliminar</a>
+                    </li>
+                <?php  endif; ?>
             <?php endwhile; ?>
         </ul>
     </div>

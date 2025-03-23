@@ -45,6 +45,7 @@
 </head>
 <body>
   <div id="contenedor">
+    <?php require "includes/sidebar.php"; ?>
     <div id="principal">
       <h1><?php echo $nombre_categoria["nombre"]; ?></h1>
       <?php while ($result = mysqli_fetch_assoc($query)) : ?>
@@ -52,12 +53,12 @@
             <a href="entrada.php?id=<?= $result["id"] ?>">
               <h2 style="width: 80%;"><?= htmlspecialchars($result['titulo']) ?></h2>
             </a>
-            <span class="fecha"> <?= htmlspecialchars($result['categoria']) ?></span>
+            <span class="fecha">Categoría: <?= htmlspecialchars($result['categoria']) ?></span>
             <br>
             <span class="fecha">Fecha de creación: <?= htmlspecialchars($result['fecha_creacion']) ?> </span>
             <br>
             <span class="fecha">Autor: <?= htmlspecialchars($result['nombre_autor']) ?></span>
-            <p><?=$result['descripcion'];?></p>
+            <p><?= htmlspecialchars($result['descripcion']);?></p>
           </article>
       <?php endwhile; mysqli_close($conexion);?>
       
