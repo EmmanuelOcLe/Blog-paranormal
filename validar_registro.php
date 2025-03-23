@@ -14,6 +14,14 @@
     $nombre = mysqli_real_escape_string($conexion, $_POST["nombre"]);
     $apellidos = mysqli_real_escape_string($conexion, $_POST["apellidos"]);
     $email = mysqli_real_escape_string($conexion, $_POST["email"]);
+
+    if (strlen($_POST["password"]) < 8)
+    {
+      echo "<script>alert('La contraseña debe ser de almenos 8 digitos')</script>";
+      echo "<script>window.location.href = 'index.php'</script>";
+      exit();
+    }
+
     $contrasena = mysqli_real_escape_string($conexion, md5($_POST["password"]));
     
     // Verificar que no exista el mismo usuario para que no se duplique en la DB
