@@ -1,6 +1,12 @@
 <?php
     session_start();
 
+    // Verificando que haya un usuario con sesión iniciada
+    if (!isset($_SESSION["user_email"]))
+    {
+        header("Location: index.php");
+    }
+
     // Variable que se usa para que no puedan acceder a los includes por url
     $_SESSION["dasfssgddgsgfvgrdf2352"] = "";
 

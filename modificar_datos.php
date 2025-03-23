@@ -3,7 +3,9 @@ session_start();
 require 'includes/conexion.php';
 
 if (!isset($_SESSION["user_id"])) {
-    die("Acceso denegado. Debes iniciar sesión.");
+    echo "<script>alert('Acceso denegado. Debe iniciar sesión.')</script>";
+    echo "<script>window.location.href = 'index.php'</script>";
+    exit();
 }
 
 $id_usuario = $_SESSION["user_id"];

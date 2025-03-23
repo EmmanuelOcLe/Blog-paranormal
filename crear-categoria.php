@@ -1,6 +1,12 @@
 <?php
 session_start();
 
+// Verificando que haya un usuario con sesión iniciada
+if (!isset($_SESSION["user_email"]))
+{
+    header("Location: index.php");
+}
+
 require_once 'includes/header.php';
 require_once 'includes/conexion.php'; 
 
@@ -50,34 +56,48 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['nombre_categoria'])) {
 if (isset($_GET['eliminar'])) {
     $id_categoria = intval($_GET['eliminar']);
 
-    // Verificar que la categoría existe
-    $stmt_verificar = $conexion->prepare("SELECT id FROM categorias WHERE id = ?");
-    $stmt_verificar->bind_param("i", $id_categoria);
-    $stmt_verificar->execute();
-    $resultado = $stmt_verificar->get_result();
+    $sql2 = "SELECT usuario_id FROM entradas WHERE categoria_id = $id_categoria";
+    $query2 = mysqli_query($conexion, $sql2);
+    $id_autor = mysqli_fetch_assoc($query2);
 
-    if ($resultado->num_rows > 0) {
-        // Primero eliminamos las entradas asociadas
-        $stmt1 = $conexion->prepare("DELETE FROM entradas WHERE categoria_id = ?");
-        $stmt1->bind_param("i", $id_categoria);
-        $stmt1->execute();
-        $stmt1->close();
-
-        // Luego eliminamos la categoría
-        $stmt2 = $conexion->prepare("DELETE FROM categorias WHERE id = ?");
-        $stmt2->bind_param("i", $id_categoria);
-
-        if ($stmt2->execute()) {
-            header("Location: crear-categoria.php"); 
-            exit();
+    if ($_SESSION["user_id"] == $id_autor["usuario_id"])
+    {
+        // Verificar que la categoría existe
+        $stmt_verificar = $conexion->prepare("SELECT id FROM categorias WHERE id = ?");
+        $stmt_verificar->bind_param("i", $id_categoria);
+        $stmt_verificar->execute();
+        $resultado = $stmt_verificar->get_result();
+    
+        if ($resultado->num_rows > 0) {
+            // Primero eliminamos las entradas asociadas
+            $stmt1 = $conexion->prepare("DELETE FROM entradas WHERE categoria_id = ?");
+            $stmt1->bind_param("i", $id_categoria);
+            $stmt1->execute();
+            $stmt1->close();
+    
+            // Luego eliminamos la categoría
+            $stmt2 = $conexion->prepare("DELETE FROM categorias WHERE id = ?");
+            $stmt2->bind_param("i", $id_categoria);
+    
+            if ($stmt2->execute()) {
+                header("Location: crear-categoria.php"); 
+                exit();
+            } else {
+                $mensaje = "<button class='btn error'>Error al eliminar la categoría</button>";
+            }
+            $stmt2->close();
         } else {
-            $mensaje = "<button class='btn error'>Error al eliminar la categoría</button>";
+            $mensaje = "<button class='btn error'>La categoría no existe</button>";
         }
-        $stmt2->close();
-    } else {
-        $mensaje = "<button class='btn error'>La categoría no existe</button>";
+        $stmt_verificar->close();
     }
-    $stmt_verificar->close();
+    else
+    {
+        echo "<script>alert('No puede eliminar una categoría que no creó.')</script>";
+        echo "<script>window.location.href = 'crear-categoria.php'</script>";
+        exit();
+    }
+
 }
 
 // Obtener categorías actualizadas
@@ -89,17 +109,31 @@ $categoria_editar = null;
 if (isset($_GET['editar'])) {
     $id_categoria = intval($_GET['editar']);
 
-    $stmt = $conexion->prepare("SELECT * FROM categorias WHERE id = ?");
-    $stmt->bind_param("i", $id_categoria);
-    $stmt->execute();
-    $resultado = $stmt->get_result();
-    $categoria_editar = $resultado->fetch_assoc();
+    $sql2 = "SELECT usuario_id FROM entradas WHERE categoria_id = $id_categoria";
+    $query2 = mysqli_query($conexion, $sql2);
+    $id_autor = mysqli_fetch_assoc($query2);
 
-    if (!$categoria_editar) {
-        $mensaje = "<button class='btn error'>La categoría no existe</button>";
+    if ($_SESSION["user_id"] == $id_autor["usuario_id"])
+    {
+        $stmt = $conexion->prepare("SELECT * FROM categorias WHERE id = ?");
+        $stmt->bind_param("i", $id_categoria);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        $categoria_editar = $resultado->fetch_assoc();
+    
+        if (!$categoria_editar) {
+            $mensaje = "<button class='btn error'>La categoría no existe</button>";
+        }
+    
+        $stmt->close();
+    }
+    else
+    {
+        echo "<script>alert('No puede editar una categoría que no creó.')</script>";
+        echo "<script>window.location.href = 'crear-categoria.php'</script>";
+        exit();
     }
 
-    $stmt->close();
 }
 ?>
 

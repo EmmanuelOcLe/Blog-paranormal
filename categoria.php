@@ -25,7 +25,8 @@
 
   if (mysqli_num_rows($query) == 0)
   {
-    header("Location: index.php");
+    echo "<script>alert('La categoría está vacía')</script>";
+    echo "<script>window.location.href = 'index.php'</script>";
     exit();
   }
 

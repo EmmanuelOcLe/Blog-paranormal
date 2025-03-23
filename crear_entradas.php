@@ -1,5 +1,12 @@
 <?php
     session_start();
+
+    // Verificando que haya un usuario con sesión iniciada
+    if (!isset($_SESSION["user_email"]))
+    {
+        header("Location: index.php");
+    }
+
     require_once 'includes/header.php';
     require_once 'includes/conexion.php';
 
@@ -141,6 +148,7 @@
 </head>
 <body>
 <div id="contenedor">
+    <?php require "includes/sidebar.php"; ?>
     <div id="principal">
         <h1>Gestión de Entradas</h1>
         <form action="<?= $_SERVER['PHP_SELF']; ?>" method="POST">
