@@ -218,6 +218,8 @@ input[type="submit"],
 
 #principal p{
     margin-top: 8px;
+    width: 80%;
+    word-wrap: break-word;
 }
 
 #ver-todas a{
