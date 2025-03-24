@@ -1,0 +1,81 @@
+/*FUENTES*/
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+/*GENERALES*/
+body {
+    background: url(../assets/cubes.png) #F4F4F4;
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* Contenedor principal con sidebar a la derecha */
+#contenedor {
+    width: 90%;
+    margin: 30px auto;
+    display: flex;
+    flex-direction: row-reverse; /* Mueve el sidebar a la derecha */
+}
+
+/* Sidebar */
+#sidebar {
+    width: 25%;
+}
+
+/* Contenedor de resultados de búsqueda */
+#busqueda-contenedor {
+    width: 75%;
+    padding: 20px;
+    margin-right: 25px;
+    background: white;
+    border-radius: 5px;
+    box-shadow: 0 0 5px #ccc;
+}
+
+/* Estilos de títulos */
+#busqueda-contenedor h1 {
+    font-size: 28px;
+    color: #333;
+    text-shadow: 1px 1px 2px #ccc;
+    text-align: center;
+}
+
+/* Resultados de la búsqueda */
+#busqueda-resultados {
+    list-style: none;
+    margin-top: 20px;
+    padding: 0;
+}
+
+.busqueda-item a {
+    display: block;
+    width: 80%;
+    padding: 15px;
+    background: transparent;
+    border-radius: 5px;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.3s ease;
+}
+
+.busqueda-item strong {
+    color: #2979CD;
+}
+
+.busqueda-categoria {
+    display: block;
+    margin-top: 5px;
+    font-size: 14px;
+    color: #555;
+}
+
+/* Alerta cuando no hay resultados */
+.busqueda-alerta-error {
+    padding: 10px;
+    color: white;
+    text-align: center;
+    border-radius: 3px;
+    margin-top: 20px;
+    background: red;
+}

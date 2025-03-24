@@ -1,0 +1,41 @@
+/* Estilos para botones */
+.btn {
+    display: inline-block;
+    padding: 8px 12px;
+    margin: 5px 0;
+    text-decoration: none;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    border: none;
+}
+
+.success {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.error {
+    background-color: #f44336;
+    color: white;
+}
+
+.edit {
+    background-color: #4e8ff0;
+    color: white;
+}
+
+.delete {
+    background-color: #d9534f;
+    color: white;
+}
+
+.btn:hover {
+    opacity: 0.8;
+}
+
+ul {
+    list-style: none; 
+    padding: 0; 
+    margin: 0; 
+}

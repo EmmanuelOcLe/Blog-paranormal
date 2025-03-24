@@ -1,0 +1,120 @@
+
+#contenedor {
+    width: 80%;
+    margin: 0px 300px 0px; 
+    padding: 20px;
+}
+
+#principal{
+    float: left;
+    width: 65%;
+    min-height: 572px;
+    background:white;
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px #ccc;
+    margin-left: 20px;
+    padding: 20px;
+    overflow: hidden;
+}
+
+
+#principal h1{
+    font-size: 32px;
+    color: #444;
+    text-shadow: 1px 1px 2px #ccc;
+    font-family: "Montserrat", sans-serif;
+}
+
+#principal h2{
+    font-size: 20px;
+    color: #2979CD;
+    text-shadow: 1px 1px 2px #ccc;
+    font-family: "Montserrat", sans-serif;
+    margin-top: 25px;
+}
+
+#principal p{
+    margin-top: 8px;
+}
+
+/* Estilos del formulario */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Etiquetas */
+label {
+    font-weight: 600;
+    color: #333;
+    text-align: left;
+    display: block;
+    margin-bottom: 5px;
+}
+
+/* Inputs */
+input {
+    width: 90%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    background: #fff;
+}
+
+/* Efecto al enfocar */
+input:focus {
+    border: 2px solid #2979CD;
+    outline: none;
+    box-shadow: 0px 0px 5px rgba(41, 121, 205, 0.5);
+}
+
+/* Botón */
+button {
+    background: #2979CD;
+    color: white;
+    border: none;
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s ease;
+}
+
+/* Hover del botón */
+button:hover {
+    background: #0056b3;
+}
+
+/* Estilo del enlace "Volver" */
+.volver {
+    display: inline-block;
+    margin-top: 40px;
+    color: #ffffff;
+    font-weight: bold;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.volver:hover {
+    color: #ffffff;
+}
+
+/*PIE DE PAGINA*/
+#pie{
+    clear:both;
+    width: 85%;
+    margin: 0px auto;
+    background: linear-gradient(to bottom, #f9f9f9 0px, #e9e9e9 100%);
+    border: 1px solid #c9c9c9;
+    border-bottom: none;
+    border-radius: 8px 8px 0px 0px;
+    color: #666;
+    height: auto;
+    padding: 15px;
+    text-align: center;
+}
+
