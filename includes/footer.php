@@ -6,5 +6,5 @@
     }
 ?>
 <footer id="pie">
-    <p>Desarrollado por {Nombre Aprendiz} &copy; {Año actual}</p>
+    <p>Desarrollado por Team Paranormal &copy; <?php echo date('Y'); ?></p>
 </footer>
