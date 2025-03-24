@@ -63,7 +63,6 @@ body{
     font-weight: 900;
     font-size: 40px;
     color: #2979cd;
-    transition: all 500ms;
     line-height: 90px;
     margin-left: 10px;
 }
@@ -217,6 +216,12 @@ input[type="submit"],
     text-shadow: 1px 1px 2px #ccc;
     font-family: "Montserrat", sans-serif;
     margin-top: 25px;
+    transition: color 100ms;
+}
+
+#principal h2:hover
+{
+    color: #000;
 }
 
 #principal p{
@@ -267,4 +272,36 @@ input[type="submit"],
 .entrada-top-title a:hover
 {
     background-color: #156785;
+}
+#principal .full-categorias
+{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+#principal .full-categorias .entrada:hover
+{
+    background-color: #fff;
+    cursor: pointer;
+}
+#principal .full-categorias .entrada a
+{
+    margin-top: 1em;
+    border: 1px solid grey;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    background-color: #efefef;
+    transition: color 100ms;
+}
+#principal .full-categorias .entrada a:hover
+{
+    background-color: #fff;
+    cursor: pointer;
+}
+
+#principal .full-categorias .entrada:hover > a
+{
+    color: #2979CD;
 }

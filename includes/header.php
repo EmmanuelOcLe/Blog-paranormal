@@ -9,7 +9,18 @@
     require_once 'includes/conexion.php'; // Conexión a la base de datos
 
     // Obtener categorías desde la base de datos
-    $sql_categorias = "SELECT * FROM categorias ORDER BY id ASC";
+    $sql_categorias = "SELECT *
+    FROM categorias c
+    LEFT JOIN(
+        SELECT categoria_id, count(categoria_id) AS 'total'
+        FROM entradas
+        GROUP BY categoria_id
+        ORDER BY COUNT(categoria_id) DESC)
+    AS sub
+    ON c.id = sub.categoria_id
+    ORDER BY sub.total
+    DESC
+    LIMIT 4";
     $categorias = mysqli_query($conexion, $sql_categorias);
 ?>
 
@@ -32,6 +43,10 @@
                     </a>
                 </li>
             <?php endwhile; ?>
+
+            <li>
+                <a href="full-categorias.php">Todas las categorías</a>
+            </li>
 
             <li>
                 <a href="index.php">Sobre mí</a>

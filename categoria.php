@@ -42,13 +42,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="css/style.css">
-  <title><?php echo $nombre_categoria["nombre"]; ?></title>
+  <title>Categoría - <?php echo $nombre_categoria["nombre"]; ?></title>
 </head>
 <body>
   <div id="contenedor">
     <?php require "includes/sidebar.php"; ?>
     <div id="principal">
-      <h1><?php echo $nombre_categoria["nombre"]; ?></h1>
+      <h1>Categoría: <?php echo $nombre_categoria["nombre"]; ?></h1>
       <?php while ($result = mysqli_fetch_assoc($query)) : ?>
           <article class="entrada">
             <a href="entrada.php?id=<?= $result["id"] ?>">
